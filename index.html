@@ -92,7 +92,7 @@
 
 <script>
 //const baseUrl = "http://localhost/";
-const baseUrl = "https://musicvideos.pages.dev/";
+const baseUrl = "https://md-imtiaj.github.io/videos/";
 
 document.getElementById("search-form").action = baseUrl;
 
@@ -103,7 +103,7 @@ let vid = searchParams.get('vid');
 let title = searchParams.get('title');
 let duration = searchParams.get('title');
 
-var urlPattern = 'seo'; //seo or param
+var urlPattern = 'param'; //seo or param
 
 var categoryPagesRegex = /\/([a-zA-Z0-9-\+]+)$/; //new RegExp(`${baseUrl}(\S+)$`);  //search or category pages regex
 var videoPagesRegex = new RegExp(`${baseUrl}(.*?)/([0-9a-zA-Z_\-]+)/([0-9]+)/(.*?)$`);  //video pages regex
