@@ -1,3 +1,3 @@
-https://musicvideos.pages.dev/music
-https://musicvideos.pages.dev/songs
-https://musicvideos.pages.dev/gaana
+https://md-imtiaj.github.io/videos/?category=music
+https://md-imtiaj.github.io/videos/?category=songs
+https://md-imtiaj.github.io/videos/?category=gaana
