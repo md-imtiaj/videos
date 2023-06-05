@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta name="revisit-after" content="1 days" />
+	<meta name="googlebot" content="index,follow" />
+	<meta name="robots" content="index,follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Latest Videos</title>
+	<meta name="distribution" content="global">
+	<meta name="description" content="Latest Videos"/>
+	<link rel="canonical" href="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+	<meta property="og:title" content="Latest Videos" />
+    <meta property="og:description" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:type" content="video" />
+	<link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAEQD/APDw9QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEREREREREBERERERERERERERIREREREREREiERERERERESIhERERERERIiIREREREREiIhERERERESIhERERERERIhEREREREREhEREREREREREREREREREREREREREREREREREREQEREREREREQAAAAAAAAAAD//wAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIABAAD//wAA" rel="icon" type="image/x-icon" />
+	<script src="https://musicvideos.pages.dev/playerjs.js" type="text/javascript"></script>
+	<style>
+		html {
+		  scroll-behavior: smooth;
+		}
+		figure  {
+			max-width: 100%;
+			height: auto;
+			margin:0;
+			margin-bottom:16px;
+		}
+		img  {
+			max-width: 100%;
+			width:400px;
+			height: 200px;
+		}
+		
+		figcaption {
+			padding-left: 4px;
+			max-width: 96%;
+		}
+		.container {
+		  position: relative;
+		}
+		.topright {
+		  position: absolute;
+		  top: 10px;
+		  right: 12px;
+		  font-size: 16px;
+		  color:#fff;
+		  background-color:#000;
+		  border-radius: 5px;
+		  opacity: 0.8;
+		  padding: 0px 4px;
+		}
+		.dl-btn{
+			padding:5px 6px;
+		}
+		
+	</style>
+  </head>
+  <body>
+    <nav>
+		<div style="display:flex;">
+		  <a href="" style="font-size:1.28em;width:30%;" id="home-link"><b>&#127968; Home</b></a>
+			 <form id="search-form" style="display:flex;width:70%;float:right;font-size:14px;border:1px solid;border-radius:6px;background-color:#efefef;">
+			  <input type="text" name="category" style="width:90%;margin:0;" placeholder="Search Videos.." />
+			  <input type="submit" value="Search"  style="margin:0; border-radius:0px 6px 6px 0px;" />
+			</form>
+		</div>
+	</nav>
+	
+	<main>
+     <section>
+	    <h1 style="font-size:1.17em;" id="page-title"></h1>
+        <div id="embedCode" style=""><div id="player"></div></div>
+	 </section>
+     
+	 <section>	
+	    <h2 style="font-size:1.14em;" id="category-heading"></h2>
+	    <div id="thumb-block"></div>	    
+	 </section>
+    </main>
+	
+	<footer style="display: flex;justify-content: space-between;">
+	     <span style="text-align:left;">&copy; Md Imtiaj <script>document.write( new Date().getFullYear() );</script></span>
+		 <span style="text-align:right;"> <a href="#" >Back to top ⬆</a> </span>
+	</footer>
+ </body>
+</html>
+
+<script>
+//const baseUrl = "http://localhost/";
+const baseUrl = "https://musicvideos.pages.dev/";
+
+document.getElementById("search-form").action = baseUrl;
+
+//first get all the vars from params
+const { searchParams } = new URL(window.location);
+let category = searchParams.get('category');
+let vid = searchParams.get('vid');
+let title = searchParams.get('title');
+let duration = searchParams.get('title');
+
+var urlPattern = 'seo'; //seo or param
+
+var categoryPagesRegex = /\/([a-zA-Z0-9-\+]+)$/; //new RegExp(`${baseUrl}(\S+)$`);  //search or category pages regex
+var videoPagesRegex = new RegExp(`${baseUrl}(.*?)/([0-9a-zA-Z_\-]+)/([0-9]+)/(.*?)$`);  //video pages regex
+
+var currentUrlWithoutParams = window.location.href.split(/[?#]/)['0'];
+//console.log(currentUrlWithoutParams);
+
+//get vid and title
+//if seo url pattern reges match for video pages.
+if( videoPagesRegex.test(currentUrlWithoutParams) ){
+	var videoMatch = currentUrlWithoutParams.match(videoPagesRegex); //console.log(videoMatch);
+	
+	category = videoMatch[1];
+	vid = videoMatch[2];
+	duration = videoMatch[3];
+	title = videoMatch[4]; //.replaceAll(' ', '-');	
+}
+
+//get search or category
+else if( categoryPagesRegex.test(currentUrlWithoutParams) ){
+	var catMatch = currentUrlWithoutParams.match(categoryPagesRegex); console.log(catMatch);
+	
+	category = catMatch[1];
+}
+
+var categoryInit = ['songs','news','movie','music','comedy','dance','cartoon','coding','stock market'];
+if(category == null){ 
+	category = categoryInit[Math.floor(Math.random()*categoryInit.length)]; 
+	}
+	
+var page_title = 'Latest ' + category.replaceAll(/\+/g, ' ') + ' Videos ';
+var meta_description = `Download ${page_title} 144p/3gp, 240p/mp4, 360p/mp4, 480p/mp4, 720p/HD/mp4, 1080p/FHD/mp4/webm, 1440p/2K/UHD/mp4/webm, 2160p/4K, 128kbps/mp3`;
+
+if (urlPattern == 'seo'){ var canonical_url = `${baseUrl}${category}`; }
+else if (urlPattern == 'param'){ var canonical_url = `${baseUrl}?category=${category}`; }
+
+	
+var embedCode = '';
+var pageThumbnail = '';
+if(vid != null){		
+   
+   //var embedCode = `<iframe src="https://www.youtube.com/embed/${vid}" frameborder="0" width="100%" height="340" scrolling="no" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+   
+   //document.getElementById("embedCode").innerHTML = embedCode;
+   
+   var player = new Playerjs({
+          id: "player",
+          file: `https://www.youtube.com/watch?v=${vid}`
+        });
+   
+   const video_title = decodeURIComponent(title);
+   page_title = video_title.replaceAll(/-/g, " ");
+   
+   pageThumbnail = 'https://i.ytimg.com/vi/' + vid + '/mqdefault.jpg';
+   
+   
+   if (urlPattern == 'seo'){ canonical_url = `${baseUrl}${category}/${vid}/${duration}/${video_title}`; }
+   else if (urlPattern == 'param'){ canonical_url = `${baseUrl}?category=${category}&title=${video_title}&vid=${vid}&dur=${duration}`; }
+   
+   var duration_format = secondsToTime(duration);
+   
+    var size_144p = estimateVideoSize("144p", duration);
+    var size_240p = estimateVideoSize("240p", duration);
+    var size_360p = estimateVideoSize("360p", duration);
+    var size_480p = estimateVideoSize("480p", duration);
+    var size_720p = estimateVideoSize("720p", duration);
+    var size_1080p = estimateVideoSize("1080p", duration);
+    var size_1440p = estimateVideoSize("1440p", duration);
+    var size_2160p = estimateVideoSize("2160p", duration);
+   
+   var meta_extra_info = `, Lenght: ${duration_format}, ${size_144p}M[144p/3gp], ${size_240p}M[240p], ${size_360p}M[360p], ${size_480p}M[480p], ${size_720p}M[720p], ${size_1080p}M[1080p/HD], ${size_1440p}M[1440p/2K], ${size_2160p}M[2160p/4K], ${size_144p}M[128kbps/mp3]`;
+   
+   meta_description = page_title + meta_extra_info;
+   
+   var videoDownloadDescription = `<p>
+   Download ${page_title} mp4, flv, 3gp, webm, mp3. <br/>
+   Video Duration: <strong>${duration_format}</strong>.<br/>   
+   </p>
+   
+   <table> 
+      <thead> 
+	     <tr> <th>Quantity</th> <th>Format</th> <th>Size</th> <th>Download</th> </tr> 
+	  </thead> 
+	  <tbody> 
+	     <tr> <td>144p [Mobile]</td> <td>3gp/mp4</td> <td>${size_144p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr> 
+	     <tr> <td>240p [ND]</td> <td>mp4/webm</td> <td>${size_240p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr> 
+	     <tr> <td>360p [SD]</td> <td>mp4/webm</td> <td>${size_360p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr> 
+	     <tr> <td>480p [SD]</td> <td>mp4/webm</td> <td>${size_480p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr> 
+	     <tr> <td>720p [HD]</td> <td>mp4/webm</td> <td>${size_720p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr> 
+	     <tr> <td>1080p [FHD]</td> <td>webm</td> <td>${size_1080p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr> 
+	     <tr> <td>1440p [2K]</td> <td>mp4/webm</td> <td>${size_1440p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr> 
+	     <tr> <td>2160p [UHD/4K]</td> <td>webm</td> <td>${size_360p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr> 
+		 <tr> <td>128 Kbps</td> <td>mp3</td> <td>${size_144p} Mb</td> <td><button class="dl-btn">Download</button></td> </tr>		 
+		 </tbody> </table>
+		 <hr/>
+   `;
+   
+   document.getElementById("embedCode").innerHTML = document.getElementById("embedCode").innerHTML + videoDownloadDescription;
+   
+}
+
+document.title = `Download ${page_title} mp4 3gp mp3`;	
+document.getElementById("page-title").innerHTML = page_title;
+
+document.getElementById("home-link").href = baseUrl;
+
+if(vid != null){
+  document.getElementById("category-heading").innerHTML = 'Latest ' + decodeURIComponent(category) + ' Videos.';
+}
+
+document.querySelector('meta[name="description"]').setAttribute('content', meta_description);
+//document.querySelector('meta[name="author"]').setAttribute('content', torrentUsername);
+
+document.querySelector('meta[property="og:description"]').setAttribute('content', meta_description);
+//document.querySelector('meta[name="twitter:description"]').setAttribute('content', torrentDescriptionMeta);
+
+document.querySelector('meta[property="og:title"]').setAttribute('content', page_title);
+//document.querySelector('meta[name="twitter:title"]').setAttribute('content', torrentName);
+
+//document.querySelector('meta[name="author"]').setAttribute('content', host_name);
+
+document.querySelector('link[rel="canonical"]').setAttribute('href', canonical_url);
+document.querySelector('meta[property="og:url"]').setAttribute('content', canonical_url);
+
+//document.querySelector('meta[name="twitter:url"]').setAttribute('content', torrentLink);
+
+document.querySelector('meta[property="og:image"]').setAttribute('content', pageThumbnail);
+
+var proxy = 'https://script.google.com/macros/s/AKfycbytIJNJ-x8iGHHN8AgxoVa60Z1HWJorMiOyPyA4eUIYbAsZdbpMJj8eJErevCVviJdTNQ/exec?url=';
+
+//if user agent is google bot, change the fetch proxy to cloudflare, because app script proxy is not crawled by google.
+//https://stackoverflow.com/questions/20084513/detect-search-crawlers-via-javascript
+var botPattern = "(googlebot\/|bot|Googlebot-Mobile|Googlebot-Image|Google-InspectionTool|Google favicon)";
+var re = new RegExp(botPattern, 'i');
+//var userAgent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+var userAgent = navigator.userAgent; 
+console.log(userAgent);
+if (re.test(userAgent)) {
+	proxy = 'https://fetch-proxy.boysofts.workers.dev/?url=';
+    console.log('Google bot');
+}
+ 
+
+var ytUrl = `https://www.youtube.com/results?search_query=${category}`;
+
+var fetchurl = proxy + ytUrl;
+
+fetch(fetchurl)
+.then(x => x.json())
+.then(y => renderHtml(y));
+
+function renderHtml(data){
+ 
+ var html = data['data'].replace(/^"(.*)"$/, "$1");
+ //console.log(html);
+ 
+ var intiData = getVar(html, 'ytInitialData');
+ //console.log(intiData);
+}
+
+function getVar(htmlString, variable){
+    // Create a new DOMParser instance
+	const parser = new DOMParser();
+
+	// Parse the HTML string
+	const doc = parser.parseFromString(htmlString, "text/html");  //console.log(doc.title); 
+
+	// Find the specific script tag containing the desired variable
+	//const targetScriptTag = doc.querySelector(`script:contains(${variable})`);
+	
+	//https://stackoverflow.com/questions/37098405/javascript-queryselector-find-div-by-innertext
+	var scriptTag = doc.evaluate("//script[contains(., '" + variable + "')]", doc, null, XPathResult.ANY_TYPE, null );
+    var scriptTagCode = scriptTag.iterateNext();
+	
+	// Extract the content of the target script tag
+	const targetScriptContent = scriptTagCode.textContent;
+	
+	eval(targetScriptContent); // Execute the JavaScript code
+
+	// Access the extracted variable
+   //console.log(window['ytInitialData']); 
+   //console.log(targetScriptContent); 
+   
+   if (typeof variable !== 'undefined') {
+    // the variable is defined
+	//console.log(eval(variable)); 
+	parseJsonData(eval(variable));
+  }
+}
+
+function parseJsonData(data){  //console.log(data);
+   //if it is not object/json data
+   if (typeof data !== 'object' && data !== null){
+	   data = JSON.parse(data);
+   }
+  
+  
+	var videosData = data['contents']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'];
+	//console.log(videosData);
+	
+	var thumb_html = '';
+	
+	videosData.forEach((videoData) => {
+	  try {
+		  var vid = videoData['videoWithContextRenderer']['videoId'];
+		  //console.log(vid);
+		  
+		 //https://i.ytimg.com/vi/B5D76r9nbq4/default.jpg   width: 120, height: 90
+		 //https://i.ytimg.com/vi/B5D76r9nbq4/mqdefault.jpg  width: 320, height: 180
+		 //https://i.ytimg.com/vi/B5D76r9nbq4/hqdefault.jpg  width: 480, height: 360
+		 //https://i.ytimg.com/vi/B5D76r9nbq4/sddefault.jpg
+		 
+		  var thumbnail =  'https://i.ytimg.com/vi/' + vid + '/mqdefault.jpg';
+                        	  
+							 
+		  var desc = videoData['videoWithContextRenderer']['accessibility']['accessibilityData']['label'];
+		  //console.log(desc);
+		  
+		  //"Tiktok ~ Trending tiktok songs - 45 minutes - Go to channel - Love Life Lyrics - 376K views - 2 days ago - play video".split(/ \- \d+ (minute|hour)/));
+		  var title = desc.split(/ \- \d+ (minute|hour)/)[0]; //spliting descript with the added hours/minutes text.
+		  //console.log(title);
+		  
+		  var titleSlug = title.replace(/[^\w\s]/gi, '').replaceAll(/ /g, "-");
+		  
+		  var dur = videoData['videoWithContextRenderer']['lengthText']['accessibility']['accessibilityData']['label'];
+		  var dur1 = videoData['videoWithContextRenderer']['lengthText']['runs'][0]['text'];
+		  
+		  var durSec = timeToSeconds(dur1);
+		  
+		  var channel = videoData['videoWithContextRenderer']['shortBylineText']['runs'][0]['text'];
+		  //console.log(dur1);
+		  //console.log(videoData['videoWithContextRenderer']);
+		  
+		  if (urlPattern == 'seo'){ 
+		     var video_url = `${baseUrl}${category}/${vid}/${durSec}/${titleSlug}`; 
+			 var channel_url = baseUrl + encodeURIComponent(channel).replaceAll(/%20/g, '+');
+		   }
+          else if (urlPattern == 'param'){ 
+		     var video_url = `${baseUrl}?category=${category}&title=${titleSlug}&vid=${vid}&dur=${durSec}`; 
+			 var channel_url = baseUrl + '?category=' + encodeURIComponent(channel).replaceAll(/%20/g, '+');
+			}
+		  
+		  thumb_html = thumb_html + `<div class="container"><figure><a href='${video_url}'><img src='${thumbnail}' alt='${title}'  width='320px' height='214px'><div class="topright">${dur1}</div></a><figcaption><a href='${video_url}'>${title}</a> By <a href="${channel_url}">${channel}</a></figcaption></figure></a> </div>\n`;
+	      
+	  }
+	  catch(err) {
+		  console.log(err);
+		  //document.getElementById("demo").innerHTML = err.message;
+		}
+	});
+	
+	document.getElementById("thumb-block").innerHTML = thumb_html;   //console.log(thumb_html); 
+}
+
+
+//convert h:m:s or m:s to seconds 
+function timeToSeconds(timeString) {
+  const timeParts = timeString.split(':');
+
+  let hours = 0;
+  let minutes = 0;
+  let seconds = 0;
+
+  if (timeParts.length === 3) {
+    hours = parseInt(timeParts[0]);
+    minutes = parseInt(timeParts[1]);
+    seconds = parseInt(timeParts[2]);
+  } else if (timeParts.length === 2) {
+    minutes = parseInt(timeParts[0]);
+    seconds = parseInt(timeParts[1]);
+  } else {
+    return null; // Invalid time format
+  }
+
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
+//convert seconds to h:m:s or m:s 
+function secondsToTime(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  let timeString = '';
+
+  if (hours > 0) {
+    timeString += `${hours}:`;
+  }
+
+  if (minutes < 10 && timeString !== '') {
+    timeString += '0';
+  }
+  timeString += `${minutes}:`;
+
+  if (remainingSeconds < 10) {
+    timeString += '0';
+  }
+  timeString += remainingSeconds;
+
+  return timeString;
+}
+
+
+//youtube video size estimation based on reselution
+function estimateVideoSize(resolution, duration) {
+  // Available resolutions and their corresponding bitrates in kilobits per second (kbps)
+  const resolutions = {
+    "144p": 200,
+    "240p": 400,
+    "360p": 800,
+    "480p": 1500,
+    "720p": 3000,
+    "1080p": 6000,
+    "1440p": 10000,
+    "2160p": 20000,
+  };
+
+  // Convert duration to seconds
+  //const seconds = duration * 60; //already sending seconds
+  const seconds = duration;
+
+  // Get the bitrate based on the selected resolution
+  const bitrate = resolutions[resolution];
+
+  // Calculate the estimated video size in megabytes (MB)
+  const sizeInMB = (bitrate * seconds) / (8 * 1024);
+
+  //return sizeInMB.toFixed(2);
+  return sizeInMB.toFixed(0);
+}
+
+</script>
