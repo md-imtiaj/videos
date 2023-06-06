@@ -17,7 +17,7 @@
     <meta property="og:description" content="" />
     <meta property="og:image" content="" />
     <meta property="og:url" content="" />
-    <meta property="og:type" content="video" />
+    <meta property="og:type" content="website" />
 	<link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAEQD/APDw9QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEREREREREBERERERERERERERIREREREREREiERERERERESIhERERERERIiIREREREREiIhERERERESIhERERERERIhEREREREREhEREREREREREREREREREREREREREREREREREREQEREREREREQAAAAAAAAAAD//wAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIABAAD//wAA" rel="icon" type="image/x-icon" />
 	<script src="https://musicvideos.pages.dev/playerjs.js" type="text/javascript"></script>
 	<style>
@@ -212,6 +212,8 @@ document.getElementById("home-link").href = baseUrl;
 
 if(vid != null){
   document.getElementById("category-heading").innerHTML = 'Latest ' + decodeURIComponent(category) + ' Videos.';
+   //set og:type only in video pages
+   document.querySelector('meta[property="og:type"]').setAttribute('content', 'video');
 }
 
 document.querySelector('meta[name="description"]').setAttribute('content', meta_description);
@@ -294,6 +296,8 @@ function getVar(htmlString, variable){
   }
 }
 
+var thumbnail_added_to_category_page = false;
+
 function parseJsonData(data){  //console.log(data);
    //if it is not object/json data
    if (typeof data !== 'object' && data !== null){
@@ -308,15 +312,21 @@ function parseJsonData(data){  //console.log(data);
 	
 	videosData.forEach((videoData) => {
 	  try {
-		  var vid = videoData['videoWithContextRenderer']['videoId'];
-		  //console.log(vid);
+		  var vid2 = videoData['videoWithContextRenderer']['videoId'];
+		  //console.log(vid2);
 		  
 		 //https://i.ytimg.com/vi/B5D76r9nbq4/default.jpg   width: 120, height: 90
 		 //https://i.ytimg.com/vi/B5D76r9nbq4/mqdefault.jpg  width: 320, height: 180
 		 //https://i.ytimg.com/vi/B5D76r9nbq4/hqdefault.jpg  width: 480, height: 360
 		 //https://i.ytimg.com/vi/B5D76r9nbq4/sddefault.jpg
 		 
-		  var thumbnail =  'https://i.ytimg.com/vi/' + vid + '/mqdefault.jpg';
+		  var thumbnail =  'https://i.ytimg.com/vi/' + vid2 + '/mqdefault.jpg';
+		  
+		  //add the first video's thumbnail as og-image to category pages
+		  if(vid == null && thumbnail_added_to_category_page == false){
+			  document.querySelector('meta[property="og:image"]').setAttribute('content', thumbnail);
+			  thumbnail_added_to_category_page = true;
+		  }
                         	  
 							 
 		  var desc = videoData['videoWithContextRenderer']['accessibility']['accessibilityData']['label'];
@@ -338,11 +348,11 @@ function parseJsonData(data){  //console.log(data);
 		  //console.log(videoData['videoWithContextRenderer']);
 		  
 		  if (urlPattern == 'seo'){ 
-		     var video_url = `${baseUrl}${category}/${vid}/${durSec}/${titleSlug}`; 
+		     var video_url = `${baseUrl}${category}/${vid2}/${durSec}/${titleSlug}`; 
 			 var channel_url = baseUrl + encodeURIComponent(channel).replaceAll(/%20/g, '+');
 		   }
           else if (urlPattern == 'param'){ 
-		     var video_url = `${baseUrl}?category=${category}&title=${titleSlug}&vid=${vid}&dur=${durSec}`; 
+		     var video_url = `${baseUrl}?category=${category}&title=${titleSlug}&vid=${vid2}&dur=${durSec}`; 
 			 var channel_url = baseUrl + '?category=' + encodeURIComponent(channel).replaceAll(/%20/g, '+');
 			}
 		  
